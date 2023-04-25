@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "cpi-edge.fullname" . }}-test-connection"
+  labels:
+    {{- include "cpi-edge.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args: ['{{ include "cpi-edge.fullname" . }}:{{ .Values.service.port }}']
+  restartPolicy: Never

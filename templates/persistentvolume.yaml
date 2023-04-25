@@ -1,0 +1,15 @@
+{{- $sizeConfig := include "cpi-edge.getSizeConfig" . | fromYaml }}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ .Values.global.customer.name }}-{{ .Values.product }}-storage
+  namespace: customer-{{ .Values.global.customer.name }}
+spec:
+  capacity:
+    storage: 1Ei
+  accessModes:
+  - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: moosefs-localmount
+  hostPath:
+    path: /mnt/mfs/customers/{{ .Values.global.customer.name }}/{{ .Values.product }}

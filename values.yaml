@@ -1,0 +1,99 @@
+# Default values for customer-provisioned-infrastructure Delta.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: zorlin/edge-ur
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "latest"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext:
+  fsGroup: 1337
+
+securityContext:
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  runAsUser: 1337
+
+service:
+  type: ClusterIP
+  port: 1313
+
+resources: {}
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+customer:
+  name: testcustomer
+  ingressName: testcustomer.edge.estuary.tech
+
+product: edge
+
+tshirtSize: pond
+
+sizes:
+  pond:
+    cpuLimit: "2000m"
+    cpuRequest: "500m"
+    memoryLimit: "4Gi"
+    memoryRequest: "1Gi"
+    storage: "10Ti"
+    ingressBandwidth: "250M"
+    egressBandwidth: "250M"
+  stream:
+    cpuLimit: "4000m"
+    cpuRequest: "1000m"
+    memoryLimit: "32Gi"
+    memoryRequest: "8Gi"
+    storage: "50Ti"
+    ingressBandwidth: "1G"
+    egressBandwidth: "1G"
+  lake:
+    cpuLimit: "8000m"
+    cpuRequest: "2000m"
+    memoryLimit: "64Gi"
+    memoryRequest: "16Gi"
+    storage: "100Ti"
+    ingressBandwidth: "1G"
+    egressBandwidth: "1G"
+
+# These are for testing, and will be overridden by a "real" customer
+global:
+  customer:
+    name: testcustomer
+  products:
+    edge:
+      tshirtSize: lake
+      ingressName: testcustomer.edge.estuary.tech

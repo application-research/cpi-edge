@@ -1,0 +1,14 @@
+{{- $sizeConfig := include "cpi-delta.getSizeConfig" . | fromYaml }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Values.global.customer.name }}-{{ .Values.product }}-storage
+  namespace: customer-{{ .Values.global.customer.name }}
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Ei
+  storageClassName: moosefs-localmount
+  volumeName: {{ .Values.global.customer.name }}-{{ .Values.product }}-storage

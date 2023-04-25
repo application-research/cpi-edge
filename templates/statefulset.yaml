@@ -1,0 +1,62 @@
+{{- $sizeConfig := include "cpi-edge.getSizeConfig" . | fromYaml }}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Values.global.customer.name }}-{{ .Values.product }}
+  labels:
+    app: {{ .Values.global.customer.name }}-{{ .Values.product }}
+spec:
+  serviceName: {{ .Values.global.customer.name }}-{{ .Values.product }}
+  podManagementPolicy: "Parallel"
+  replicas: 3
+  selector:
+    matchLabels:
+      app: {{ .Values.global.customer.name }}-{{ .Values.product }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.global.customer.name }}-{{ .Values.product }}
+    spec:
+      containers:
+      - name: {{ .Values.product }}
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        workingDir: /database
+        command: ["/app/edge", "daemon"]
+        #command: ["/bin/sh", "-c", "while true; do sleep 30; done"]
+        # envFrom:
+        #   - secretRef:
+        #       name: {{ .Values.global.customer.name }}-{{ .Values.product }}-secret
+        ports:
+          - name: edge-http
+            containerPort: 1313
+            protocol: TCP
+        readinessProbe:
+          httpGet:
+            path: /ping
+            port: edge-http
+        resources:
+          {{- toYaml .Values.resources | nindent 12 }}
+        volumeMounts:
+          - name: storage
+            mountPath: /storage
+          - name: {{ .Values.global.customer.name }}-{{ .Values.product }}-db
+            mountPath: /database
+          - name: env-file
+            mountPath: /database/.env
+            subPath: config.env
+      volumes:
+      - name: env-file
+        configMap:
+          name: {{ .Values.global.customer.name }}-{{ .Values.product }}-config
+      - name: storage
+        persistentVolumeClaim:
+          claimName: {{ .Values.global.customer.name }}-{{ .Values.product }}-storage
+  volumeClaimTemplates:
+    - metadata:
+        name: {{ .Values.global.customer.name }}-{{ .Values.product }}-db
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: "1Gi"
