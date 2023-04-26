@@ -16,6 +16,9 @@ spec:
     metadata:
       labels:
         app: {{ .Values.global.customer.name }}-{{ .Values.product }}
+      annotations:
+        kubernetes.io/ingress-bandwidth: {{ $sizeConfig.ingressBandwidth }}
+        kubernetes.io/egress-bandwidth: {{ $sizeConfig.egressBandwidth }}
     spec:
       containers:
       - name: {{ .Values.product }}
@@ -35,7 +38,12 @@ spec:
             path: /ping
             port: edge-http
         resources:
-          {{- toYaml .Values.resources | nindent 12 }}
+          limits:
+            cpu: "{{ $sizeConfig.cpuLimit }}"
+            memory: "{{ $sizeConfig.memoryLimit }}"
+          requests:
+            cpu: "{{ $sizeConfig.cpuRequest }}"
+            memory: "{{ $sizeConfig.memoryRequest }}"
         volumeMounts:
           - name: storage
             mountPath: /storage

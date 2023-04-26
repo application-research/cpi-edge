@@ -1,4 +1,4 @@
-{{- $sizeConfig := include "cpi-delta.getSizeConfig" . | fromYaml }}
+{{- $sizeConfig := include "cpi-edge.getSizeConfig" . | fromYaml }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
