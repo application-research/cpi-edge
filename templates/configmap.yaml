@@ -3,12 +3,20 @@ kind: ConfigMap
 metadata:
   name: {{ .Values.global.customer.name }}-{{ .Values.product }}-config
   namespace: customer-{{ .Values.global.customer.name }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "10"
 data:
   config.env: |
     NODE_NAME=edge
     NODE_DESCRIPTION=Edge node
-    DB_NAME=edge-urdb
     DELTA_NODE_API=https://node.delta.store
     DEAL_CHECK=600 # 10 minutes
     REPLICATION_FACTOR=3
     REPO=/storage/whypfs
+    {{- $dbName := "edgedb" }}
+    {{- $secretName := "edge.db-fws-ev2.credentials.postgresql.acid.zalan.do" }}
+    {{- $secretNamespace := printf "customer-%s" .Values.global.customer.name }}
+    {{- $secret := (lookup "v1" "Secret" $secretNamespace $secretName) }}
+    {{- $password := index $secret.data "password" | b64dec }}
+    DB_NAME={{ $dbName }}
+    {{ printf "DB_DSN=postgres://edge:%s@db-fws-ev2.%s/edgedb" $password $secretNamespace }}
