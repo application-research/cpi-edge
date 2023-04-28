@@ -26,12 +26,12 @@ spec:
       containers:
       - name: {{ .Values.product }}
         image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
-        workingDir: /database
+        workingDir: /data
         command: ["/app/edge", "daemon"]
+        envFrom:
+          - configMapRef:
+              name: {{ .Values.global.customer.name }}-{{ .Values.product }}-config
         #command: ["/bin/sh", "-c", "while true; do sleep 30; done"]
-        # envFrom:
-        #   - secretRef:
-        #       name: {{ .Values.global.customer.name }}-{{ .Values.product }}-secret
         ports:
           - name: edge-http
             containerPort: 1414
@@ -51,9 +51,9 @@ spec:
           - name: storage
             mountPath: /storage
           - name: {{ .Values.global.customer.name }}-{{ .Values.product }}-db
-            mountPath: /database
+            mountPath: /data
           - name: env-file
-            mountPath: /database/.env
+            mountPath: /data/.env
             subPath: config.env
       volumes:
       - name: env-file
