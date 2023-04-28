@@ -38,7 +38,7 @@ securityContext:
 
 service:
   type: ClusterIP
-  port: 1313
+  port: 1414
 
 resources: {}
 
