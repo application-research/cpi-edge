@@ -14,9 +14,7 @@ data:
     REPLICATION_FACTOR=3
     REPO=/storage/whypfs
     {{- $dbName := "edgedb" }}
-    {{- $secretName := "edge.db-fws-ev2.credentials.postgresql.acid.zalan.do" }}
     {{- $secretNamespace := printf "customer-%s" .Values.global.customer.name }}
-    {{- $secret := (lookup "v1" "Secret" $secretNamespace $secretName) }}
-    {{- $password := index $secret.data "password" | b64dec }}
     DB_NAME={{ $dbName }}
-    {{ printf "DB_DSN=postgres://edge:%s@db-fws-ev2.%s/edgedb" $password $secretNamespace }}
+    {{- $decodedPassword := .Values.global.customer.edge_db_password | b64dec }}
+    {{ printf "DB_DSN=postgres://edge:%s@edge.dbfws.%s/edgedb" $decodedPassword $secretNamespace }}
