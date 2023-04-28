@@ -2,7 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ .Values.global.customer.name }}-{{ .Values.product }}-ingress
-  namespace: customer-{{ .Values.customer.name }}
+  namespace: customer-{{ .Values.global.customer.name }}
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
     kubernetes.io/ingress.class: nginx
