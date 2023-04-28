@@ -1,6 +1,6 @@
 {{- $sizeConfig := include "cpi-edge.getSizeConfig" . | fromYaml }}
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
   name: {{ .Values.global.customer.name }}-{{ .Values.product }}
   namespace: customer-{{ .Values.global.customer.name }}
@@ -9,8 +9,6 @@ metadata:
   labels:
     app: {{ .Values.global.customer.name }}-{{ .Values.product }}
 spec:
-  serviceName: {{ .Values.global.customer.name }}-{{ .Values.product }}
-  podManagementPolicy: "Parallel"
   replicas: 3
   selector:
     matchLabels:
@@ -26,7 +24,7 @@ spec:
       containers:
       - name: {{ .Values.product }}
         image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
-        workingDir: /database
+        workingDir: /app
         command: ["/app/edge", "daemon"]
         #command: ["/bin/sh", "-c", "while true; do sleep 30; done"]
         # envFrom:
@@ -50,10 +48,8 @@ spec:
         volumeMounts:
           - name: storage
             mountPath: /storage
-          - name: {{ .Values.global.customer.name }}-{{ .Values.product }}-db
-            mountPath: /database
           - name: env-file
-            mountPath: /database/.env
+            mountPath: /app/.env
             subPath: config.env
       volumes:
       - name: env-file
@@ -62,12 +58,3 @@ spec:
       - name: storage
         persistentVolumeClaim:
           claimName: {{ .Values.global.customer.name }}-{{ .Values.product }}-storage
-  volumeClaimTemplates:
-    - metadata:
-        name: {{ .Values.global.customer.name }}-{{ .Values.product }}-db
-      spec:
-        accessModes:
-          - ReadWriteOnce
-        resources:
-          requests:
-            storage: "1Gi"
