@@ -59,13 +59,7 @@ spec:
             mountPath: /storage
           - name: {{ .Values.global.customer.name }}-{{ .Values.product }}-db
             mountPath: /data
-          - name: env-file
-            mountPath: /data/.env
-            subPath: config.env
       volumes:
-      - name: env-file
-        configMap:
-          name: {{ .Values.global.customer.name }}-{{ .Values.product }}-config
       - name: storage
         persistentVolumeClaim:
           claimName: {{ .Values.global.customer.name }}-{{ .Values.product }}-storage
