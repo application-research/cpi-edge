@@ -26,7 +26,7 @@ spec:
       initContainers:
       - name: symlink-templates
         image: busybox:latest
-        command: [ "ln", "-ns", "/app/templates", "/data/templates" ]
+        command: [ "sh", "-c", "if [ ! -L /data/templates ]; then ln -ns /app/templates /data/templates; fi" ]
         volumeMounts:
         - name: {{ .Values.global.customer.name }}-{{ .Values.product }}-db
           mountPath: /data
