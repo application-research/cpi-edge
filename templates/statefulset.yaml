@@ -23,6 +23,13 @@ spec:
         kubernetes.io/ingress-bandwidth: {{ $sizeConfig.ingressBandwidth }}
         kubernetes.io/egress-bandwidth: {{ $sizeConfig.egressBandwidth }}
     spec:
+      initContainers:
+      - name: symlink-templates
+        image: busybox:latest
+        command: [ "ln", "-s", "/app/templates", "/data/templates" ]
+        volumeMounts:
+        - name: {{ .Values.global.customer.name }}-{{ .Values.product }}-db
+          mountPath: /data
       containers:
       - name: {{ .Values.product }}
         image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
