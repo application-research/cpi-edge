@@ -13,7 +13,7 @@ data:
   REPLICATION_FACTOR: "3"
   REPO: /storage/whypfs
   {{- $dbName := "deltadb" }}
-  {{- $secretNamespace := printf "customer-%s" .Values.global.customer.name -}}
+  {{ $secretNamespace := printf "customer-%s" .Values.global.customer.name -}}
   DB_NAME: {{ $dbName }}
-  {{- $decodedPassword := .Values.global.customer.edge_db_password | b64dec -}}
+  {{ $decodedPassword := .Values.global.customer.edge_db_password | b64dec -}}
   DB_DSN: {{ printf "postgres://edge:%s@dbfws.%s/edgedb" $decodedPassword $secretNamespace }}
