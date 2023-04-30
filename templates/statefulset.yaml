@@ -23,10 +23,23 @@ spec:
         kubernetes.io/ingress-bandwidth: {{ $sizeConfig.ingressBandwidth }}
         kubernetes.io/egress-bandwidth: {{ $sizeConfig.egressBandwidth }}
     spec:
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
       initContainers:
+      - name: init-storage
+        image: busybox
+        command: ["sh", "-c", "chown 1337:1337 /storage/"]
+        securityContext:
+          runAsUser: 0
+          runAsGroup: 0
+        volumeMounts:
+        - name: storage
+          mountPath: /storage
       - name: symlink-templates
         image: busybox:latest
         command: [ "ln", "-nsf", "/app/templates", "/data/templates" ]
+        securityContext:
+          {{- toYaml .Values.securityContext | nindent 10 }}
         volumeMounts:
         - name: {{ .Values.global.customer.name }}-{{ .Values.product }}-db
           mountPath: /data
@@ -35,6 +48,8 @@ spec:
         image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
         workingDir: /data
         command: ["/app/edge", "daemon"]
+        securityContext:
+          {{- toYaml .Values.securityContext | nindent 10 }}
         envFrom:
           - configMapRef:
               name: {{ .Values.global.customer.name }}-{{ .Values.product }}-config
