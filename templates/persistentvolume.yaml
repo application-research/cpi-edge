@@ -4,6 +4,8 @@ kind: PersistentVolume
 metadata:
   name: {{ .Values.global.customer.name }}-{{ .Values.product }}-storage
   namespace: customer-{{ .Values.global.customer.name }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "10"
 spec:
   capacity:
     storage: 1Ei
