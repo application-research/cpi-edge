@@ -97,7 +97,3 @@ global:
     edge:
       tshirtSize: lake
       ingressName: testcustomer.edge.estuary.tech
-      customFlags:
-        network: test
-      customEnv: |
-        AGGREGATE_SIZE: 2048576
