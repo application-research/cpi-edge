@@ -11,7 +11,6 @@ metadata:
 spec:
   serviceName: {{ .Values.global.customer.name }}-{{ .Values.product }}
   podManagementPolicy: "Parallel"
-  replicas: 3
   selector:
     matchLabels:
       app: {{ .Values.global.customer.name }}-{{ .Values.product }}
