@@ -2,15 +2,15 @@
 apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ include "cpi-edge.fullname" . }}
+  name: {{ .Values.global.customer.name }}-{{ .Values.product }}-hpa
   namespace: customer-{{ .Values.global.customer.name }}
   labels:
     {{- include "cpi-edge.labels" . | nindent 4 }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
-    kind: Deployment
-    name: {{ include "cpi-edge.fullname" . }}
+    kind: StatefulSet
+    name: {{ .Values.global.customer.name }}-{{ .Values.product }}
   minReplicas: {{ .Values.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.autoscaling.maxReplicas }}
   metrics:
