@@ -4,6 +4,8 @@ kind: HorizontalPodAutoscaler
 metadata:
   name: {{ .Values.global.customer.name }}-{{ .Values.product }}-hpa
   namespace: customer-{{ .Values.global.customer.name }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "15"
   labels:
     {{- include "cpi-edge.labels" . | nindent 4 }}
 spec:
