@@ -46,7 +46,14 @@ spec:
       - name: {{ .Values.product }}
         image: {{ .Values.global.products.edge.image | default (printf "%s:%s" .Values.image.repository .Values.image.tag) }}
         workingDir: /data
-        command: ["/app/edge", "daemon"]
+        command:
+          - "/app/edge"
+          - "daemon"
+          {{- if (index .Values.global.products (index .Values.product)).customFlags }}
+          {{- range $key, $value := (index .Values.global.products (index .Values.product)).customFlags }}
+          - "--{{ $key }}={{ $value }}"
+          {{- end }}
+          {{- end }}
         securityContext:
           {{- toYaml .Values.securityContext | nindent 10 }}
         envFrom:
