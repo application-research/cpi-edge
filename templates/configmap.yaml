@@ -17,7 +17,11 @@ metadata:
 data:
   NODE_NAME: edge
   NODE_DESCRIPTION: Edge node
+  {{- if .Values.global.products.delta }}
+  DELTA_NODE_API: https://{{ .Values.global.products.delta.ingressName }}
+  {{- else }}
   DELTA_NODE_API: https://delta.estuary.tech
+  {{- end }}
   DEAL_CHECK: "600" # 10 minutes
   REPLICATION_FACTOR: "3"
   REPO: /storage/whypfs
