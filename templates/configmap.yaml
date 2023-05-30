@@ -31,5 +31,5 @@ data:
   {{- $decodedPassword := (include "decodePassword" .Values.global.customer.edge_db_password) }}
   DB_DSN: {{ printf "postgres://edge:%s@dbfws.%s/edgedb" $decodedPassword $secretNamespace }}
   {{- if (index .Values.global.products (index .Values.product)).customEnv }}
-  {{ (index .Values.global.products (index .Values.product)).customEnv }}
+{{ (index .Values.global.products (index .Values.product)).customEnv | indent 2 }}
   {{- end }}
