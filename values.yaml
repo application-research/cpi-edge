@@ -70,24 +70,24 @@ sizes:
     memoryLimit: "4Gi"
     memoryRequest: "256Mi"
     storage: "10Ti"
-    ingressBandwidth: "250M"
-    egressBandwidth: "250M"
+#    ingressBandwidth: "250M"
+#    egressBandwidth: "250M"
   stream:
     cpuLimit: "4000m"
     cpuRequest: "200m"
     memoryLimit: "32Gi"
     memoryRequest: "1Gi"
     storage: "50Ti"
-    ingressBandwidth: "1G"
-    egressBandwidth: "1G"
+#    ingressBandwidth: "1G"
+#    egressBandwidth: "1G"
   lake:
     cpuLimit: "8000m"
     cpuRequest: "400m"
     memoryLimit: "64Gi"
     memoryRequest: "8Gi"
     storage: "100Ti"
-    ingressBandwidth: "1G"
-    egressBandwidth: "1G"
+#    ingressBandwidth: "1G"
+#    egressBandwidth: "1G"
 
 # These are for testing, and will be overridden by a "real" customer
 global:
